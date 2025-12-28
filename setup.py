@@ -18,7 +18,7 @@ setup(
     maintainer='tstaya',
     maintainer_email='haku.355350@gmail.com',
     description='ロボットシステム学',
-    license='BSD-3-Clause',
+    license='GPL-3.0 license',
     extras_require={
         'test': [
             'pytest',
