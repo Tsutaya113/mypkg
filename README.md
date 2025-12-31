@@ -6,7 +6,10 @@ ROS2 の基本的な publish / subscribe 通信を学習するための練習用
 本パッケージでは、PC の CPU 使用率から推定した消費電力を talker ノードで計算・送信し、  
 listener ノードで受信・表示するシステムを構築しています。
 
-## 概要
+## 消費電力量チェッカー
+![test](https://github.com/Tsutaya113/mypkg/actions/workflows/test.yml/badge.svg)
+本パッケージは、PC の CPU 使用率をもとに消費電力を推定し、  
+ROS 2 のトピックとして配信することで、他ノードから消費電力をリアルタイムで監視できるようにすることを目的としています。
 
 - **talker ノード**
   - `/proc/stat` から CPU 使用率を取得
@@ -25,22 +28,49 @@ listener ノードで受信・表示するシステムを構築しています�
 ### 1. ワークスペースのビルド
 
 ```shell
-cd ~/ros2_ws
-colcon build
-source install/setup.bash
+$ cd ~/ros2_ws/src
+$ git clone https://github.com/yagikai2112/mypkg.git
+$ cd ~/ros2_ws
+$ colcon build
+$ source install/setup.bash
 ```
 
+### 2-1. ノードを個別に起動する場合
 
+### ターミナル①（talker）
+```shell
+ros2 run mypkg talker
+```
+
+※ talker は publish のみを行い、画面出力は行いません。
+
+### ターミナル②（listener）
+```shell
+ros2 run mypkg listener
+```
+
+実行すると以下のように消費電力が表示されます。
+```shell
+[INFO] [power_listener]: Estimated Power: 6.32 W
+[INFO] [power_listener]: Estimated Power: 10.85 W
+```
+
+### 2-2. ノードを個別に起動する場合
+```shell
+ros2 launch mypkg power.launch.py
+```
+
+- talker と listener が同時に起動し、listener 側にのみ消費電力が表示されます。
+
+## 推定方法について
+以下の計算方法で推定
+CPU使用率 (%) × CPUのTDP（例: 15W）＝ 推定消費電力(W)
 
 ## テスト環境
-- Ubuntu 22.04.5 LTS
+- Ubuntu 22.04 LTS
+- ROS2 Humble
+- Python 3.10
 
-## 必要なソフトウェア
-- Github Actions
-  - テスト済みのpythonバージョン: 3.7 ~ 3.12  
-
-## 著作権・ライセンス・利用しているソフトウェア
-- Ubuntu 22.04.5 LTS / Python3 .13 .5
+## 著作権・ライセンス
 - このソフトウェアパッケージは、3条項BSDの下、再頒布および使用が許可されています。  
-- 本[README](https://github.com/Tsutaya113/robosys2025/blob/main/README.md)は、[asnm1208](https://github.com/asnm1208)の[robosys2025](https://github.com/asnm1208/robosys2025/blob/main/README.md)（© 2025 asnm1208）と[tadano0405](https://github.com/tadano0504)の[robosys2025](https://github.com/tadano0504/robosys2025/blob/main/README.md)（© 2025 Tadano Keito）を参考に作られています。
 - © 2025 Tsutaya Koki
