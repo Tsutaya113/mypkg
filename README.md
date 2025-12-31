@@ -7,7 +7,7 @@ ROS2 の基本的な publish / subscribe 通信を学習するための練習用
 listener ノードで受信・表示するシステムを構築しています。
 
 ## 消費電力量チェッカー
-![test](https://github.com/Tsutaya113/mypkg/actions/workflows/test.yml/badge.svg)
+![test](https://github.com/Tsutaya113/mypkg/actions/workflows/test.yml/badge.svg)  
 本パッケージは、PC の CPU 使用率をもとに消費電力を推定し、  
 ROS 2 のトピックとして配信することで、他ノードから消費電力をリアルタイムで監視できるようにすることを目的としています。
 
@@ -63,7 +63,7 @@ ros2 launch mypkg power.launch.py
 - talker と listener が同時に起動し、listener 側にのみ消費電力が表示されます。
 
 ## 推定方法について
-以下の計算方法で推定
+以下の計算方法で推定  
 CPU使用率 (%) × CPUのTDP（例: 15W）＝ 推定消費電力(W)
 
 ## テスト環境
