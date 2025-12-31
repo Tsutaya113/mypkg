@@ -35,10 +35,6 @@ class PowerTalker(Node):
         msg.data = power
         self.publisher_.publish(msg)
 
-        self.get_logger().info(
-            f'Publish: {power:.2f} W (CPU usage {cpu_usage*100:.1f}%)'
-        )
-
         self.prev_idle = idle
         self.prev_total = total
 
