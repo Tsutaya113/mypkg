@@ -1,18 +1,56 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int16
+from std_msgs.msg import Float32
+import time
 
-rclpy.init()
-node = Node("talker")
-pub = node.create_publisher(Int16, "countup", 10)
-n = 0
-def cb():
-    global n
-    msg = Int16()
-    msg.data = n
-    pub.publish(msg)
-    n += 1
+class PowerTalker(Node):
+    def __init__(self):
+        super().__init__('power_talker')
+        self.publisher_ = self.create_publisher(Float32, 'power', 10)
 
-def main():
-    node.create_timer(0.5, cb)
+        self.prev_idle, self.prev_total = self.read_cpu_stat()
+        self.timer = self.create_timer(1.0, self.timer_callback)
+
+        # ノートPC想定のTDP（適当でOK）
+        self.TDP_WATT = 15.0
+
+    def read_cpu_stat(self):
+        with open('/proc/stat', 'r') as f:
+            cpu = f.readline().split()
+            idle = int(cpu[4])
+            total = sum(map(int, cpu[1:]))
+            return idle, total
+
+    def timer_callback(self):
+        idle, total = self.read_cpu_stat()
+
+        idle_diff = idle - self.prev_idle
+        total_diff = total - self.prev_total
+
+        cpu_usage = 1.0 - (idle_diff / total_diff)
+
+        power = cpu_usage * self.TDP_WATT
+
+        msg = Float32()
+        msg.data = power
+        self.publisher_.publish(msg)
+
+        self.get_logger().info(
+            f'Publish: {power:.2f} W (CPU usage {cpu_usage*100:.1f}%)'
+        )
+
+        self.prev_idle = idle
+        self.prev_total = total
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = PowerTalker()
     rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+

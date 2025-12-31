@@ -1,17 +1,29 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int16
+from std_msgs.msg import Float32
+
+class PowerListener(Node):
+    def __init__(self):
+        super().__init__('power_listener')
+        self.subscription = self.create_subscription(
+            Float32,
+            'power',
+            self.callback,
+            10
+        )
+
+    def callback(self, msg):
+        self.get_logger().info(f'Estimated Power: {msg.data:.2f} W')
 
 
-rclpy.init()
-node = Node("listener")
-
-
-def cb(msg):
-    global node
-    node.get_logger().info("Listen: %d" %msg.data)
-
-
-def main():
-    pub = node.create_subscription(Int16, "countup", cb, 10)
+def main(args=None):
+    rclpy.init(args=args)
+    node = PowerListener()
     rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+
