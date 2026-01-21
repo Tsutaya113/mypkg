@@ -1,29 +1,33 @@
-#!/bin/bash
+#!/bin/bash -xv
 # SPDX-FileCopyrightText: 2025 Koki Tsutaya
 # SPDX-License-Identifier: BSD-3-Clause
 
-# ワークスペース指定（引数があればそれを使用）
-workspace=${1:-"$HOME/ros2_ws"}
-
-cd "$workspace" || exit 1
-
-# パッケージをビルド
-colcon build --packages-select mypkg > /dev/null 2>&1 || exit 1
-
-# ROS 2 環境読み込み
-source /opt/ros/humble/setup.bash > /dev/null 2>&1
-source install/setup.bash > /dev/null 2>&1
-
-# launch を 10 秒間実行してログ取得
-timeout 10 ros2 launch mypkg talk_listen.launch.py > /tmp/mypkg.log 2>&1
-
-# Estimated Power の出力があるか確認
-if ! grep -q "Estimated Power:" /tmp/mypkg.log; then
-    echo "error"
+ng () {
+    echo "NG"
     exit 1
-fi
+}
 
-# 正常終了メッセージ
+# 作業用ディレクトリ（どこで実行されてもOK）
+WORKDIR=$(mktemp -d)
+cd "$WORKDIR" || ng
+
+source /opt/ros/humble/setup.bash || ng
+
+# ワークスペース構築
+mkdir -p ros2_ws/src || ng
+rsync -av "$GITHUB_WORKSPACE/" ros2_ws/src/mypkg > /dev/null
+
+cd ros2_ws || ng
+colcon build --packages-select mypkg > /dev/null 2>&1 || ng
+source install/setup.bash || ng
+
+# テスト実行
+timeout 10 ros2 launch mypkg talk_listen.launch.py \
+  > /tmp/mypkg.log 2>&1 || true
+
+grep -q "Estimated Power:" /tmp/mypkg.log || ng
+
 echo "OK"
 exit 0
+
 

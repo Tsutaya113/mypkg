@@ -59,7 +59,7 @@ CPU使用率 (%) × CPUのTDP（例: 15W）＝ 推定消費電力(W)
 - ROS2 Humble
 - Python 3.10
 
-##トピック仕様
+## トピック仕様
 - トピック名: /estimated_power
 - メッセージ型: std_msgs/msg/Float32
 - 内容: 推定した消費電力 [W]
