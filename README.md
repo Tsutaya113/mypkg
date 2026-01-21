@@ -15,9 +15,8 @@
   - 推定した消費電力をトピックとして publish
 
 - **listenerノード**
- - talker が送信した消費電力を subscribe
- - 1秒周期で消費電力を画面に表示 
-
+  - talker が送信した消費電力を subscribe
+  - 1秒周期で消費電力を画面に表示 
 
 - **launch ファイル**
   - talker と listener を同時に起動可能
