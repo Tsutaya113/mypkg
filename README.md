@@ -15,11 +15,11 @@
   - 推定した消費電力をトピックとして publish
 
 - **launch ファイル**
-  - talker と listener を同時にに起動可能
+  - talker と listener を同時に起動可能
 
 ### 使い方
 
-### 1. ワークスペースのビルド
+### 1. パッケージのビルド
 
 ```shell
 $ cd ~/ros2_ws/src
