@@ -14,22 +14,16 @@
   - CPU 使用率をもとに消費電力を推定
   - 推定した消費電力をトピックとして publish
 
+- **listenerノード**
+ - talker が送信した消費電力を subscribe
+ - 1秒周期で消費電力を画面に表示 
+
 - **launch ファイル**
   - talker と listener を同時に起動可能
 
 ### 使い方
 
-### 1. パッケージのビルド
-
-```shell
-$ cd ~/ros2_ws/src
-$ git clone https://github.com/yagikai2112/mypkg.git
-$ cd ~/ros2_ws
-$ colcon build
-$ source install/setup.bash
-```
-
-### 2-1. ノードを個別に起動する場合
+### 1-1. ノードを個別に起動する場合
 
 ### ターミナル①（talker）
 ```shell
@@ -49,7 +43,7 @@ ros2 run mypkg listener
 [INFO] [power_listener]: Estimated Power: 10.85 W
 ```
 
-### 2-2. ノードを個別に起動する場合
+### 1-2. ノードを個別に起動する場合
 ```shell
 ros2 launch mypkg power.launch.py
 ```
@@ -64,6 +58,11 @@ CPU使用率 (%) × CPUのTDP（例: 15W）＝ 推定消費電力(W)
 - Ubuntu 22.04 LTS
 - ROS2 Humble
 - Python 3.10
+
+##トピック仕様
+- トピック名: /estimated_power
+- メッセージ型: std_msgs/msg/Float32
+- 内容: 推定した消費電力 [W]
 
 ## 著作権・ライセンス
 - このソフトウェアパッケージは、3条項BSDの下、再頒布および使用が許可されています。  
