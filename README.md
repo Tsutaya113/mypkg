@@ -45,7 +45,7 @@ ros2 run mypkg listener
 
 ### 1-2. ノードを個別に起動する場合
 ```shell
-ros2 launch mypkg power.launch.py
+ros2 launch mypkgtalk_listen.launch.py
 ```
 
 - talker と listener が同時に起動し、listener 側にのみ消費電力が表示されます。
